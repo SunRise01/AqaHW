@@ -16,7 +16,7 @@ public class AbstractPage {
 
     private WebDriverWait wait =  new WebDriverWait(DriverFactory.getDriver(), 10);
 
-     AbstractPage() {
+    AbstractPage() {
     }
 
     void  proceedToPage(final String url) {
@@ -28,8 +28,8 @@ public class AbstractPage {
         return webElement;
     }
 
-    List<WebElement> getElements(By locator) {
-        return DriverFactory.getDriver().findElements(locator);
+    List<WebElement> getElements(String locator) {
+        return DriverFactory.getDriver().findElements(By.xpath(locator));
     }
 
 

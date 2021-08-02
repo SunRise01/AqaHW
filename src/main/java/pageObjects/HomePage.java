@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 
 import static consts.Constants.BusinessConfigs.HOME_PAGE_URL;
+import static java.lang.Thread.sleep;
 
 public class HomePage extends AbstractPage {
 
@@ -22,6 +23,7 @@ public class HomePage extends AbstractPage {
 
     private By FAQPageButton = By.xpath("//ul[@class='main-nav__list']//a[contains(@class,'faq')]");
 
+    private By blogPageButton = By.xpath("//ul[@class='main-nav__list']//a[@class='topNavItem news click hover']");
 
     public SignInPage clickSignInButton() {
         getElement(signInButton).click();
@@ -60,7 +62,17 @@ public class HomePage extends AbstractPage {
         Assert.assertTrue(isUserNameDisplayed(),"User is not logged in");
     }
 
+    public TrainingListPage clickTrainingListButton(){
+        getElement(trainingListPageButton).click();
+        LOG.info("'Training list' page opened");
+        return new TrainingListPage();
+    }
 
+    public BlogPage clickBlogPageButton(){
+        getElement(blogPageButton).click();
+        LOG.info("'Blog' page opened");
+        return new BlogPage();
+    }
 
 
 }
