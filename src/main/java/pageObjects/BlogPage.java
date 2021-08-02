@@ -10,7 +10,7 @@ import java.util.List;
 public class BlogPage extends AbstractPage{
     private static final Logger LOG = Logger.getLogger(HomePage.class);
     private By activeNavLink = By.xpath("//a[@class='tab-nav__item ng-scope active']");
-    List <WebElement> navLinks = getElements("//a[@class='tab-nav__item ng-scope active']");
+    List <WebElement> navLinks = getElements("//a[@class='tab-nav__item ng-scope']");
 
     public BlogPage verifyActiveLink(){
         Assert.assertTrue(getElement(activeNavLink).isDisplayed(), "Error, active link is not found");
@@ -20,8 +20,8 @@ public class BlogPage extends AbstractPage{
 
     public void verifyNavLinks(){
         boolean linksIsDisplayed=true;
-        for (int i = 1; i <= 5; i++) {
-            if(navLinks.get(i).isDisplayed()) linksIsDisplayed=false;
+        for (int i = 0; i < 5; i++) {
+            if(!navLinks.get(i).isDisplayed()) linksIsDisplayed=false;
         }
         Assert.assertTrue(linksIsDisplayed, "Error, Links is not displayed");
         LOG.info("Verifyed not active links");
