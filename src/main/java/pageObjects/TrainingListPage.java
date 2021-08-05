@@ -1,5 +1,8 @@
 package pageObjects;
 
+import consts.CitiesNames;
+import consts.CountriesNames;
+import consts.CoursesNames;
 import driver.DriverFactory;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
@@ -16,6 +19,7 @@ public class TrainingListPage extends AbstractPage{
     private static final Logger LOG = Logger.getLogger(HomePage.class);
     private By trainingSearch = By.xpath("//form[@class='training-search-form ng-pristine ng-valid ng-scope']");
     private By searchBySkills = By.xpath("//div[@class='navigation-item ng-binding' and contains(text(), 'By skills')]");
+    private By searchByLocations = By.xpath("//div[@class='navigation-item ng-binding' and contains(text(), 'By locations')]");
     private By activeCheckbox = By.xpath("//span[@class='filter-field__input-item-close-icon']");
     private By divWithCourses = By.xpath("//div[@class='training-list__container training-list__desktop']");
     private By javaCheckbox = By.xpath("//label[normalize-space()='Java']/span");
@@ -28,15 +32,32 @@ public class TrainingListPage extends AbstractPage{
         return this;
     }
 
-    public TrainingListPage clickOnJavaCheckbox(){
-        actionProvider.moveToElement(getElement(divWithCourses)).perform();
+    public TrainingListPage clickOnCourse(CoursesNames courseName){
+        actionProvider.moveToElement(getElement(trainingSearch)).perform();
         getElement(trainingSearch).click();
         LOG.info(String.format("Moved to training search"));
         getElement(searchBySkills).click();
         LOG.info(String.format("Clicked on skills"));
-        getElement(javaCheckbox).click();
-        LOG.info(String.format("Clicked on java checkbox"));
+
+        LOG.info("Chosen course is "+ courseName.getCourseName());
+        getElement((By.xpath
+                ("//label[@class='location__not-active-label ng-binding'][normalize-space()='"
+                        + courseName.getCourseName() + "']//span[@class='checkmark']"))).click();
+        LOG.info("Clicked on course");
         getElement(trainingSearch).click();
+        return this;
+    }
+
+    public TrainingListPage uncheckActiveCourse(){
+        actionProvider.moveToElement(getElement(trainingSearch)).perform();
+        LOG.info(String.format("Moved to training search"));
+        getElement(activeCheckbox).click();
+        LOG.info(String.format("Disabled java"));
+        getElement(trainingSearch).click();
+        getElement(searchByLocations).click();
+        LOG.info("Clicked on locations");
+        getElement(trainingSearch).click();
+        LOG.info("Clicked on training search");
         return this;
     }
 
@@ -47,28 +68,29 @@ public class TrainingListPage extends AbstractPage{
         return this;
     }
 
-    public TrainingListPage uncheckJava(){
-        actionProvider.moveToElement(getElement(divWithCourses)).perform();
-        LOG.info(String.format("Moved to training search"));
-        getElement(activeCheckbox).click();
-        LOG.info(String.format("Disabled java"));
-        return this;
-    }
-
-    public TrainingListPage clickOnRubyCheckbox(){
-        actionProvider.moveToElement(getElement(divWithCourses)).perform();
-        getElement(trainingSearch).click();
-        LOG.info(String.format("Moved to training search"));
-        actionProvider.moveToElement(getElement(rubyCheckbox)).click().perform();
-        LOG.info(String.format("Clicked on ruby checkbox"));
-        getElement(trainingSearch).click();
-        return this;
-    }
-
     public TrainingListPage verifyAmountOfRubyCourses(){
-        List<WebElement> rubyCoursesList = getElements("//div[@class='training-list__container training-list__desktop']//div[@class='training-item__title ng-binding']");
-        Assert.assertTrue(rubyCoursesList.size()==0, "Error, wrong amount of Ruby courses");
-        LOG.info(String.format("Checked amount of ruby courses"));
+        Assert.assertTrue(getElement(By.xpath("//span[contains(text(), 'No training are available.')]")).isDisplayed(), "Error, wrong amount of Ruby courses");
+        LOG.info(String.format("Checked error message on ruby courses"));
         return this;
+    }
+
+    public TrainingListPage clickOnCountry(CountriesNames countryName){
+        actionProvider.moveToElement(getElement(trainingSearch)).click().perform();
+        LOG.info(String.format("Moved to training search"));
+        getElement(By.xpath("//div[contains(text(), '"+countryName.getCountryName()+"')]")).click();
+        LOG.info("Clicked on "+countryName.getCountryName());
+        return this;
+    }
+
+    public TrainingListPage clickOnCity(CitiesNames cityName){
+        getElement(By.xpath("//label[@class='location__not-active-label ng-binding'][normalize-space()='"+cityName.getCityName()+"']//span[@class='checkmark']")).click();
+        LOG.info("Clicked on "+cityName);
+        getElement(trainingSearch).click();
+        return this;
+    }
+    public void verifyAmountOfCourses(){
+        List<WebElement> coursesList = getElements("//div[@class='training-list__container training-list__desktop']//div[@class='training-item__title ng-binding']");
+        Assert.assertTrue(coursesList.size()==9, "Error, wrong amount of courses");
+        LOG.info(String.format("Checked amount of courses"));
     }
 }

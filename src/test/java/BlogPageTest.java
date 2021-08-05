@@ -11,7 +11,6 @@ public class BlogPageTest extends BaseTest{
                 .enterPassword("ivanhorintestPassword")
                 .clickSignInButton()
                 .clickBlogPageButton()
-                .verifyActiveLink()
                 .verifyNavLinks();
     }
 }
